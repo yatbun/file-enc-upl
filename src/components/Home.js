@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Container, Card, Form, Button } from "react-bootstrap";
+import NumberPicker from "react-widgets/NumberPicker";
 
 import { useStore } from "../contexts/StoreContext";
 
@@ -10,10 +11,11 @@ export default function Home() {
     const history = useHistory();
 
     const [selectedFile, setSelectedFile] = useState(null);
+    const [downloadNum, setDownloadNum] = useState(1);
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const newId = await uploadFile(selectedFile);
+        const newId = await uploadFile(selectedFile, downloadNum);
         history.push("/link/" + newId);
     }
 
@@ -40,6 +42,15 @@ export default function Home() {
                                         setSelectedFile(e.target.files[0])
                                     }
                                     required
+                                />
+                            </Form.Group>
+
+                            <Form.Group id="num" className="mt-4">
+                                <Form.Label>Permitted Downloads:</Form.Label>
+                                <NumberPicker
+                                    min={1}
+                                    value={downloadNum}
+                                    onChange={(val) => setDownloadNum(val)}
                                 />
                             </Form.Group>
 
