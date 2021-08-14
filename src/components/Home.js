@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Container, Card, Form, Button } from "react-bootstrap";
@@ -13,9 +13,15 @@ export default function Home() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [downloadNum, setDownloadNum] = useState(1);
 
+    const passwordRef = useRef();
+
     async function handleSubmit(e) {
         e.preventDefault();
-        const newId = await uploadFile(selectedFile, downloadNum);
+        const newId = await uploadFile(
+            selectedFile,
+            passwordRef.current.value,
+            downloadNum
+        );
         history.push("/link/" + newId);
     }
 
@@ -41,6 +47,16 @@ export default function Home() {
                                     onChange={(e) =>
                                         setSelectedFile(e.target.files[0])
                                     }
+                                    required
+                                />
+                            </Form.Group>
+
+                            <Form.Group id="password" className="mt-4">
+                                <Form.Label>File Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="password"
+                                    ref={passwordRef}
                                     required
                                 />
                             </Form.Group>
