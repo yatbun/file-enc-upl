@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { AES } from "crypto-js";
 
 import { store, storage } from "../firebase";
 
@@ -32,10 +33,58 @@ export function StoreProvider({ children }) {
         storage.ref(fileUid).delete();
     }
 
+    function encFile(file) {
+        console.log(file);
+        var reader = new FileReader();
+        let keyy = "";
+
+        reader.onload = () => {
+            let key = "password";
+
+            let encrypted = AES.encrypt(reader.result, key);
+            console.log(encrypted.key.toString());
+            keyy = encrypted.key.toString();
+
+            const encryptedFile = new File([encrypted.toString()], file.name, {
+                type: file.type,
+                lastModified: file.lastModified,
+            });
+
+            console.log(encryptedFile);
+            decFile(encryptedFile, keyy);
+            return encryptedFile;
+        };
+
+        reader.readAsBinaryString(file);
+    }
+
+    function decFile(file, keyy) {
+        console.log(keyy);
+        var reader = new FileReader();
+
+        reader.onload = () => {
+            let key = "password";
+
+            let decrypted = AES.decrypt(reader.result, keyy);
+
+            const decryptedFile = new File([decrypted.toString()], file.name, {
+                type: file.type,
+                lastModified: file.lastModified,
+            });
+
+            console.log(decryptedFile);
+            return decryptedFile;
+        };
+
+        reader.readAsBinaryString(file);
+    }
+
     const value = {
         uploadFile,
         getFileURL,
         deleteFile,
+        encFile,
+        decFile,
     };
 
     return (

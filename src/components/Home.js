@@ -7,7 +7,7 @@ import NumberPicker from "react-widgets/NumberPicker";
 import { useStore } from "../contexts/StoreContext";
 
 export default function Home() {
-    const { uploadFile } = useStore();
+    const { uploadFile, encFile } = useStore();
     const history = useHistory();
 
     const [selectedFile, setSelectedFile] = useState(null);
@@ -15,8 +15,9 @@ export default function Home() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const newId = await uploadFile(selectedFile, downloadNum);
-        history.push("/link/" + newId);
+        // const newId = await uploadFile(selectedFile, downloadNum);
+        // history.push("/link/" + newId);
+        encFile(selectedFile);
     }
 
     return (
