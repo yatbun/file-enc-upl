@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-
+import Cryptify from 'cryptify';
 import { store, storage } from "../firebase";
 
 export const StoreContext = React.createContext();
@@ -10,10 +10,15 @@ export function useStore() {
 }
 
 export function StoreProvider({ children }) {
-    async function uploadFile(file, downloadsLeft) {
+    async function uploadFile(file, downloadsLeft,password) {
         const uid = uuidv4() + "." + file.name.split(".").pop();
+        const instance = new Cryptify(file, password,);
+        instance
+          .encrypt()
+          .then((file) => {
+            storage.ref(uid).put(file);
+          })
 
-        storage.ref(uid).put(file);
 
         const { id } = await store.collection("files").add({
             uid: uid,
