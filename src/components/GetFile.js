@@ -9,7 +9,6 @@ import { useStore } from "../contexts/StoreContext";
 
 export default function GetFile() {
     const { id } = useParams();
-    
     const { getFileURL } = useStore();
 
     const [fileDoc, setFileDoc] = useState(null);
