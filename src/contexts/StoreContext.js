@@ -10,7 +10,7 @@ export function useStore() {
 }
 
 export function StoreProvider({ children }) {
-    async function uploadFile(file, downloadsLeft) {
+    async function uploadFile(file, password, downloadsLeft) {
         const uid = uuidv4() + "." + file.name.split(".").pop();
 
         storage.ref(uid).put(file);
@@ -18,6 +18,7 @@ export function StoreProvider({ children }) {
         const { id } = await store.collection("files").add({
             uid: uid,
             fileName: file.name,
+            password: password,
             downloadsLeft: downloadsLeft,
         });
 
